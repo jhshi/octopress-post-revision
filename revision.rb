@@ -41,7 +41,7 @@ module Jekyll
 
             full_path = post_or_page['full_path']
 
-            cmd = 'git log --pretty="%H|%cd|%s" --max-count=' + @limit.to_s + ' ' + full_path
+            cmd = 'git log --date=local --pretty="%H|%cd|%s" --max-count=' + @limit.to_s + ' ' + full_path
             logs = `#{cmd}`
 
             html = '<ul>'
