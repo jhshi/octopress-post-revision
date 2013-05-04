@@ -41,7 +41,7 @@ module Jekyll
 
             full_path = post_or_page['full_path']
 
-            cmd = 'git log --pretty="%H|%cd|%s" --max-count=' + @limit + ' ' + full_path
+            cmd = 'git log --pretty="%H|%cd|%s" --max-count=' + @limit.to_s + ' ' + full_path
             logs = `#{cmd}`
 
             html = '<ul>'
@@ -49,7 +49,7 @@ module Jekyll
                 parts = line.split('|')
                 hash = parts[0]
                 date = parts[1]
-                msg = parts[2..-1]
+                msg = parts[2..-1].join
                 html << '<li><strong>' + date + '</strong><br/>' + msg + '</li>'
             end
             html << '</ul>'
