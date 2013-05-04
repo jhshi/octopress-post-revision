@@ -13,7 +13,7 @@ configurations in your `_config.yml`. Then this plugin will also generate links
 to Github commit history for each post.
 
 - `github_user`: your user name on Github
-- `github_reop`: your blog source repo name on Github. More specifically, for Jekyll sites
+- `github_repo`: your blog source repo name on Github. More specifically, for Jekyll sites
   hosted on Github Pages, this should be `SOMEBODY.github.[io][com]`.
 
 
