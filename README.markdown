@@ -14,7 +14,7 @@ to Github commit history for each post.
 
 - `github_user`: your user name on Github
 - `github_reop`: your blog source repo name on Github. More specifically, for Jekyll sites
-  hosted on Github Pages, this should be `YOUR_SITE.github.[io][com]`.
+  hosted on Github Pages, this should be `SOMEBODY.github.[io][com]`.
 
 
 ### Usage
@@ -34,3 +34,6 @@ When generate Github commit history links, this plugin assumes that:
   `source/_posts` directory. (For Octopress sites)
 
 - Otherwise, blog posts should be in `_posts` directory. (For Jekyll sites)
+
+If this assumption is not right in your case, then you'll probably need to tweak
+the url patterns a little bit.
