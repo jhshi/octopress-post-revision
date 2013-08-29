@@ -11,7 +11,7 @@ module Jekyll
       file_name = @name
       full_path = File.join(@base, file_name)
       original_to_liquid.deep_merge({
-        'full_path' => full_path, 
+        'full_path' => full_path,
         'file_name' => file_name
       })
     end
@@ -42,28 +42,36 @@ module Jekyll
 
       full_path = post_or_page['full_path']
 
+      # travis-ci build yelds error: Liquid Exception: can't convert nil into String in post
+      # details: https://travis-ci.org/teracy-official/blog/builds/10746189
+      if full_path == nil
+        puts post_or_page
+        puts "full_path is nil"
+        return ''
+      end
+
       cmd = 'git log --date=local --pretty="%cd|%s" --max-count=' + @limit.to_s + ' ' + full_path
       logs = `#{cmd}`
 
       html = '<ul>'
       logs.each_line do |line|
         parts = line.split('|')
-        date, msg = parts[0], parts[1..-1].join
+        date, msg = parts[0], parts[1..-1].join('|') # keep origin pileline from logs
         html << '<li><strong>' + date + '</strong><br/>' + msg + '</li>'
       end
       html << '</ul>'
 
-      if site['github_user'] != nil && site['github_repo'] != nil 
+      if site['github_user'] != nil && site['github_repo'] != nil
         cmd = 'git rev-parse --abbrev-ref HEAD'
         # chop last '\n' of branch name
         branch = `#{cmd}`.chop
         if site['source'] != nil
           # for Octopress sites
-          link = File.join('https://github.com', site['github_user'], site['github_repo'], 
+          link = File.join('https://github.com', site['github_user'], site['github_repo'],
                            'commits', branch, site['source'], '_posts', post_or_page['file_name'])
-        else 
+        else
           # for Jekyll sites
-          link = File.join('https://github.com', site['github_user'], site['github_repo'], 
+          link = File.join('https://github.com', site['github_user'], site['github_repo'],
                            'commits', branch, '_posts', post_or_page['file_name'])
         end
         html << 'View on <a href=' + link + ' target=_blank>Github</a>'
