@@ -1,6 +1,3 @@
-require 'jekyll'
-require 'jekyll/post'
-
 module Jekyll
 
   # add post.file_name and post.full_path
@@ -8,11 +5,9 @@ module Jekyll
     alias_method :original_to_liquid, :to_liquid
 
     def to_liquid
-      file_name = @name
-      full_path = File.join(@base, file_name)
       original_to_liquid.deep_merge({
-        'full_path' => full_path,
-        'file_name' => file_name
+        'file_name' => @name,
+        'full_path' => File.join(@base, @name)
       })
     end
   end
@@ -34,19 +29,20 @@ module Jekyll
 
     def render(context)
       site = context.environments.first['site']
-      if context.environments.first['post'] != nil
-        post_or_page = context.environments.first['post']
-      else
-        post_or_page = context.environments.first['page']
+      if site['github_user'] == nil || site['github_repo'] == nil
+        return ''
       end
 
-      full_path = post_or_page['full_path']
+      post = context.environments.first['post']
+      if post == nil
+        post = context.environments.first['page']
+        if post == nil
+          return ''
+        end
+      end
 
-      # travis-ci build yelds error: Liquid Exception: can't convert nil into String in post
-      # details: https://travis-ci.org/teracy-official/blog/builds/10746189
+      full_path = post['full_path']
       if full_path == nil
-        puts post_or_page
-        puts "full_path is nil"
         return ''
       end
 
@@ -61,25 +57,23 @@ module Jekyll
       end
       html << '</ul>'
 
-      if site['github_user'] != nil && site['github_repo'] != nil
-        cmd = 'git rev-parse --abbrev-ref HEAD'
-        # chop last '\n' of branch name
-        branch = `#{cmd}`.chop
-        if site['source'] != nil
-          # for Octopress sites
-          link = File.join('https://github.com', site['github_user'], site['github_repo'],
-                           'commits', branch, site['source'], '_posts', post_or_page['file_name'])
-        else
-          # for Jekyll sites
-          link = File.join('https://github.com', site['github_user'], site['github_repo'],
-                           'commits', branch, '_posts', post_or_page['file_name'])
-        end
-        html << 'View on <a href=' + link + ' target=_blank>Github</a>'
+      cmd = 'git rev-parse --abbrev-ref HEAD'
+      # chop last '\n' of branch name
+      branch = `#{cmd}`.chop
+      if site['source'] != nil
+        # for Octopress sites
+        link = File.join('https://github.com', site['github_user'], site['github_repo'],
+                         'commits', branch, site['source'], '_posts', post['file_name'])
+      else
+        # for Jekyll sites
+        link = File.join('https://github.com', site['github_user'], site['github_repo'],
+                         'commits', branch, '_posts', post['file_name'])
       end
+      html << 'View on <a href=' + link + ' target=_blank>Github</a>'
 
       return html
-    end
-  end
-end
+    end #render
+  end # RevisionTag
+end # Jekyll
 
 Liquid::Template.register_tag('revision', Jekyll::RevisionTag)
