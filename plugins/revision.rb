@@ -30,6 +30,7 @@ module Jekyll
     def render(context)
       site = context.environments.first['site']
       if site['github_user'] == nil || site['github_repo'] == nil
+        puts 'Uh-oh, site is nil'
         return ''
       end
 
@@ -37,14 +38,14 @@ module Jekyll
       if post == nil
         post = context.environments.first['page']
         if post == nil
+          puts 'Uh-oh, post is nil'
           return ''
         end
       end
 
       full_path = post['full_path']
       if full_path == nil
-        puts post['title']
-        puts 'full path is nil'
+        puts post['title'] + ' full path is nil'
         return ''
       end
 
