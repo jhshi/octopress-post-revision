@@ -43,6 +43,8 @@ module Jekyll
 
       full_path = post['full_path']
       if full_path == nil
+        puts post['title']
+        puts 'full path is nil'
         return ''
       end
 
