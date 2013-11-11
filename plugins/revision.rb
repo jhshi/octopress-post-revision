@@ -1,14 +1,15 @@
 module Jekyll
 
-  # add post.file_name and post.full_path
-  class Post
-    alias_method :original_to_liquid, :to_liquid
+  class PostFullPath < Generator
+    safe :true
+    priority :high
 
-    def to_liquid
-      original_to_liquid.deep_merge({
-        'file_name' => @name,
-        'full_path' => File.join(@base, @name)
-      })
+    def generate(site)
+      site.posts.each do |post|
+        base = post.instance_variable_get(:@base)
+        name = post.instance_variable_get(:@name)
+        post.data.merge!({'file_name' => name, 'full_path' => File.join(base, name)})
+      end
     end
   end
 
