@@ -1,7 +1,8 @@
 ## Show Post's Revision History For Jekyll/Octopress Powered Sites
+
 This plugin provide a Liquid tag to generate blog post's revision history, which
-are merely commit messages when you do `git commit`. See a demo on [this
-site](http://jhshi.me).
+are nothing but commit messages when you do `git commit`. See [this blog
+post][blog] for more information and also as a demo.
 
 ### Installation
 Put `revision.rb` to your `/_plugins/` (for Jekyll) or `/plugins/` (for
@@ -37,3 +38,5 @@ When generate Github commit history links, this plugin assumes that:
 
 If this assumption is not right in your case, then you'll probably need to tweak
 the url patterns a little bit.
+
+[blog]: http://jhshi.me/2013/11/17/post-revision-plugin-for-octopress/
