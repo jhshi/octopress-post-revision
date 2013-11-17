@@ -4,11 +4,26 @@ module Jekyll
     safe :true
     priority :high
 
+    # Generate file info for each post and page
+    #  +site+ is the site
     def generate(site)
       site.posts.each do |post|
         base = post.instance_variable_get(:@base)
         name = post.instance_variable_get(:@name)
-        post.data.merge!({'file_name' => name, 'full_path' => File.join(base, name)})
+        post.data.merge!({
+          'dir_name' => '_posts',
+          'file_name' => name, 
+          'full_path' => File.join(base, name),
+        })
+      end
+      site.pages.each do |page|
+        base = page.instance_variable_get(:@base)
+        dir = page.instance_variable_get(:@dir)
+        name = page.instance_variable_get(:@name)
+        page.data.merge!({
+          'dir_name' => dir,
+          'file_name' => name, 
+          'full_path' => File.join(base, dir, name)})
       end
     end
   end
@@ -50,6 +65,11 @@ module Jekyll
         return ''
       end
 
+      if !File.exists?(full_path)
+        puts full_path + ' does not exist'
+        return ''
+      end
+
       cmd = 'git log --date=local --pretty="%cd|%s" --max-count=' + @limit.to_s + ' ' + full_path
       logs = `#{cmd}`
 
@@ -61,17 +81,22 @@ module Jekyll
       end
       html << '</ul>'
 
+      dir_name = post['dir_name']
+      if  dir_name == nil
+        return html
+      end
+
       cmd = 'git rev-parse --abbrev-ref HEAD'
       # chop last '\n' of branch name
       branch = `#{cmd}`.chop
       if site['source'] != nil
         # for Octopress sites
         link = File.join('https://github.com', site['github_user'], site['github_repo'],
-                         'commits', branch, site['source'], '_posts', post['file_name'])
+                         'commits', branch, site['source'], post['dir_name'], post['file_name'])
       else
         # for Jekyll sites
         link = File.join('https://github.com', site['github_user'], site['github_repo'],
-                         'commits', branch, '_posts', post['file_name'])
+                         'commits', branch, post['dir_name'], post['file_name'])
       end
       html << 'View on <a href=' + link + ' target=_blank>Github</a>'
 
