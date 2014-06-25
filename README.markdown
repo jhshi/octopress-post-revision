@@ -4,9 +4,14 @@ This plugin provide a Liquid tag to generate blog post's revision history, which
 are nothing but commit messages when you do `git commit`. See [this blog
 post][blog] for more information and also as a demo.
 
+[blog]: http://jhshi.me/2013/11/17/post-revision-plugin-for-octopress/
+
 ### Installation
 Put `revision.rb` to your `/_plugins/` (for Jekyll) or `/plugins/` (for
-Octopress) directory of your blog source root.
+Octopress) directory of your blog source root. Require installation of
+[jekyll-date-format][df].
+
+[df]: https://github.com/imathis/jekyll-date-format
 
 ### Configuration
 If your blog source are hosted on Github, you can set two optional
@@ -39,4 +44,3 @@ When generate Github commit history links, this plugin assumes that:
 If this assumption is not right in your case, then you'll probably need to tweak
 the url patterns a little bit.
 
-[blog]: http://jhshi.me/2013/11/17/post-revision-plugin-for-octopress/
