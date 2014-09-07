@@ -1,4 +1,5 @@
-require 'jekyll-date-format'
+require 'octopress-date-format'
+require 'time'
 
 module Jekyll
 
@@ -79,7 +80,7 @@ module Jekyll
       logs.each_line do |line|
         parts = line.split('|')
         date, msg = parts[0], parts[1..-1].join('|') # keep origin pileline from logs
-        formatted_date = Jekyll::DateFormat.format_date(date, site['date_format'])
+        formatted_date = Octopress::PageDate.format_date(Time.parse(date))
         html << '<li><strong>' + formatted_date + '</strong><br/>' + msg + '</li>'
       end
       html << '</ul>'
